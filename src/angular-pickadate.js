@@ -114,12 +114,13 @@
             if (!dateString) return;
             if (angular.isDate(dateString)) return new Date(dateString);
 
-            // Use moment.js for parsing dates if available, fall back to simple parsing otherwise
-            if (moment != null) {
+            if (options.useMoment) {
+              // Use moment.js for parsing dates
               var momentDate = moment(dateString, format);
-              if (! momentDate.isValid) return;
+              if (! momentDate.isValid()) return;
               return momentDate.toDate();
             } else {
+              // Use simple parsing for dates
               var formatRegex = '(dd|MM|yyyy)',
                   separator   = format.match(/[^a-zA-Z]/)[0],
                   dateParts   = dateString.split(separator),
@@ -257,7 +258,8 @@
           minDate: '=',
           maxDate: '=',
           disabledDates: '&',
-          weekStartsOn: '='
+          weekStartsOn: '=',
+          useMoment: '=?'
         },
 
         link: function(scope, element, attrs, ngModel)  {
@@ -272,7 +274,8 @@
                 nextMonthSelectable:     /^(next|both)$/.test(attrs.selectOtherMonths),
                 weekStartsOn: scope.weekStartsOn,
                 noExtraRows: attrs.hasOwnProperty('noExtraRows'),
-                disabledDates: scope.disabledDates
+                disabledDates: scope.disabledDates,
+                useMoment: (!! scope.useMoment)
               });
 
           scope.displayPicker = !wantsModal;
