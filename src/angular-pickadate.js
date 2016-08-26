@@ -114,22 +114,29 @@
             if (!dateString) return;
             if (angular.isDate(dateString)) return new Date(dateString);
 
-            var formatRegex = '(dd|MM|yyyy)',
-                separator   = format.match(/[-|/]/)[0],
-                dateParts   = dateString.split(separator),
-                regexp      = new RegExp([formatRegex, formatRegex, formatRegex].join(separator)),
-                formatParts = format.match(regexp),
-                dateObj     = {};
+            // Use moment.js for parsing dates if available, fall back to simple parsing otherwise
+            if (moment != null) {
+              var momentDate = moment(dateString, format);
+              if (! momentDate.isValid) return;
+              return momentDate.toDate();
+            } else {
+              var formatRegex = '(dd|MM|yyyy)',
+                  separator   = format.match(/[^a-zA-Z]/)[0],
+                  dateParts   = dateString.split(separator),
+                  regexp      = new RegExp([formatRegex, formatRegex, formatRegex].join(separator)),
+                  formatParts = format.match(regexp),
+                  dateObj     = {};
 
-            formatParts.shift();
+              formatParts.shift();
 
-            angular.forEach(formatParts, function(part, i) {
-              dateObj[getPartName(part)] = parseInt(dateParts[i], 10);
-            });
+              angular.forEach(formatParts, function(part, i) {
+                dateObj[getPartName(part)] = parseInt(dateParts[i], 10);
+              });
 
-            if (isNaN(dateObj.year) || isNaN(dateObj.month) || isNaN(dateObj.day)) return;
+              if (isNaN(dateObj.year) || isNaN(dateObj.month) || isNaN(dateObj.day)) return;
 
-            return new Date(dateObj.year, dateObj.month - 1, dateObj.day, 3);
+              return new Date(dateObj.year, dateObj.month - 1, dateObj.day, 3);
+            }
           },
 
           setRestrictions: function(restrictions) {
