@@ -158,18 +158,19 @@
 
           buildDateObject: function(date) {
             var localDate     = angular.copy(date),
-                formattedDate = dateFilter(localDate, format),
+                formattedDate = (options.useMoment ? moment(date).format(format) : dateFilter(localDate, format)),
                 disabled      = disabledDates({date: localDate, formattedDate: formattedDate}),
                 monthOffset   = this.getMonthOffset(localDate, currentDate),
                 outOfMinRange = localDate < minDate,
                 outOfMaxRange = localDate > maxDate,
                 outOfMonth    = (monthOffset === -1 && !options.previousMonthSelectable) ||
-                                (monthOffset === 1 && !options.nextMonthSelectable);
+                                (monthOffset === 1 && !options.nextMonthSelectable),
+                today = (options.useMoment ? moment().format(format) : dateFilter(new Date(), format));
 
             return {
               date: localDate,
               formattedDate: formattedDate,
-              today: formattedDate === dateFilter(new Date(), format),
+              today: formattedDate === today,
               disabled: disabled,
               outOfMinRange: outOfMinRange,
               outOfMaxRange: outOfMaxRange,
