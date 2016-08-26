@@ -41,15 +41,13 @@
           isCSS1Compat = (($document.compatMode || "") === "CSS1Compat");
 
       var computeStyles = function(element) {
-        var scrollX = supportPageOffset ? $window.pageXOffset : isCSS1Compat ? $document.documentElement.scrollLeft : $document.body.scrollLeft,
-            scrollY = supportPageOffset ? $window.pageYOffset : isCSS1Compat ? $document.documentElement.scrollTop : $document.body.scrollTop,
-            innerWidth = $window.innerWidth || $document.documentElement.clientWidth || $document.body.clientWidth,
-            styles = { top: scrollY + element.getBoundingClientRect().bottom + 'px' };
+        var innerWidth = $window.innerWidth || $document.documentElement.clientWidth || $document.body.clientWidth,
+            styles = { top: element.getBoundingClientRect().bottom + 'px' };
 
         if ((innerWidth - element.getBoundingClientRect().left ) >= 300) {
-          styles.left = scrollX + element.getBoundingClientRect().left  + 'px';
+          styles.left = element.getBoundingClientRect().left  + 'px';
         } else {
-          styles.right = innerWidth - element.getBoundingClientRect().right - scrollX + 'px';
+          styles.right = innerWidth - element.getBoundingClientRect().right + 'px';
         }
 
         return styles;
