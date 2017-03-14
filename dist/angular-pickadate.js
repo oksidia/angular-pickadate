@@ -139,8 +139,8 @@
           },
 
           setRestrictions: function(restrictions) {
-            minDate       = this.parseDate(restrictions.minDate) || new Date(0);
-            maxDate       = this.parseDate(restrictions.maxDate) || new Date(99999999999999);
+            minDate       = this.parseDate(restrictions.minDate) || new Date(-9999, 1, 1);
+            maxDate       = this.parseDate(restrictions.maxDate) || new Date(9999, 1, 1);
             currentDate   = restrictions.currentDate;
           },
 
